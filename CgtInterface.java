@@ -1,12 +1,3 @@
-package src;
-/*Author: (T7) Yiyuan Li, Tian Zhiran
- *Student No: C3434681, C3494501
- *Date: 26-01-2024
- *Description: [Yiyuan] this structure makes the CgtInterface class more modular,
- *                      with each individual function encapsulated in its own method
- *                      which helps with code maintenance and understanding.
- */
-
 import java.text.DecimalFormat;
 import java.util.Scanner;
 

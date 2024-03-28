@@ -22,13 +22,16 @@ public class CgtInterface {
 
     public void run() {
 
+        // loop
         while (true) {
-            System.out.println("Select option:");
-            System.out.println("1. Add user and process");
-            System.out.println("2. Delete user");
-            System.out.println("3. Display user");
-            System.out.println("4. Display all users");
-            System.out.println("5. Exit");
+            System.out.println("==============CGT CALCULATOR==============");
+            System.out.println("Please Select option:");
+            System.out.println("(1). Add user and process");
+            System.out.println("(2). Delete user");
+            System.out.println("(3). Display user");
+            System.out.println("(4). Display all users");
+            System.out.println("(5). Exit");
+            System.out.println("==========================================");
             int choice = scanner.nextInt();
 
             switch (choice) {
@@ -39,7 +42,7 @@ public class CgtInterface {
                         System.out.println("Cannot add more users. Maximum 5 users");
                     break;
                 case 2:
-                    // TODO: deleting user
+                    deleteUser();
                     break;
                 case 3:
                     // TODO: displaying a specific user
@@ -57,6 +60,7 @@ public class CgtInterface {
         }
     }
 
+    // add user function
     private void addUserAndProcess() {
         User newUser = new User();
 
@@ -86,9 +90,8 @@ public class CgtInterface {
         // ask for investment
         System.out.println("Do you want to add an investment? (yes/no):");
         if (getYesNoInput()) {
-            System.out.println("How many investments do you want to add? (1 or 2)");
-            int numInvestment = getPositiveIntegerInput("Enter number of investments: (1 or 2)");
-            for (int i = 0; i < numInvestment; i++) {
+        int investmentCount = getPositiveIntegerInput("Enter number of investments: (1 or 2)");
+            for (int i = 0; i < investmentCount; i++) {
                 double year1Deposit = getInitialInvestment(scanner);
                 double year2Deposit = getYearlyInvestment(scanner, 1);
                 double year3Deposit = getYearlyInvestment(scanner, 2);
@@ -102,8 +105,33 @@ public class CgtInterface {
             }
         }
         users.add(newUser);
-        System.out.println("User added successfully.");
+        System.out.println("User added successfully!");
 
+    }
+
+    // delete user
+    private void deleteUser() {
+        System.out.println("Enter the name of the user to delete:");
+        String name = scanner.next(); // read the user's name.
+
+        boolean isDeleted = false;
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getName().equalsIgnoreCase(name)) {
+            /* comparing two strings to check if they are equal
+               users.get(i) - accesses the i th element of the users list
+               .equalsIgnoreCase(name) - compares the name obtained from the User object
+               with the name string provided by the user input
+            */
+                users.remove(i); // remove user from the list
+                isDeleted = true;
+                break;
+            }
+        }
+
+        if (isDeleted)
+            System.out.println("The user has been deleted successfully");
+        else
+            System.out.println("User not found");
     }
 
     // error handling - PositiveDouble

@@ -77,12 +77,33 @@ public class CgtInterface {
         newUser.setName(scanner.nextLine().trim());
 
         newUser.setAnnualSalary(getPositiveDoubleInput("Enter your annual salary: "));
-        scanner.nextLine();
 
         System.out.println("Are you a resident? (yes/no)");
         newUser.setResident(getYesNoInput());
 
+        newUser.setBuyingPrice(getPositiveDoubleInput("Enter buying price of the cryptocurrency:"));
 
+        newUser.setSellingPrice(getSellingPriceInput("Enter selling price of the cryptocurrency:", newUser.getBuyingPrice()));
+
+        newUser.setYears(getPositiveIntegerInput("Enter the number of years cryptocurrency is held:"));
+
+        newUser.calcCgt();
+
+        System.out.println("Do you want to add an investment? (yes/no):");
+        if (getYesNoInput()) {
+            double year1Deposit = getInitialInvestment(scanner);
+            double year2Deposit = getYearlyInvestment(scanner, 1);
+            double year3Deposit = getYearlyInvestment(scanner, 2);
+            int coinSelection = getCryptoCurrencySelection(scanner);
+            user.setInvestCoinSelection(coinSelection);
+
+            // Initialize the investment account
+            Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, user.getInvestCoinSelection());
+            newUser.addInvestment(investment);
+        }
+
+        users.add(newUser);
+        System.out.println("User added successfully.");
 
     }
 
@@ -153,112 +174,6 @@ public class CgtInterface {
         return sellingPrice;
     }
 
-    private static String getName(Scanner scanner){
-        System.out.println("Enter your name: ");
-        return scanner.nextLine();
-    }
-
-    // method to check user is resident or not, return a boolean value
-    private static boolean getResident(Scanner scanner){
-        while (true) {
-            System.out.println("Are you a resident? (y/n)");
-            String input = scanner.next().trim().toLowerCase(); // turn user input to lowercase for checking
-            // check is y or n
-            if (input.length() == 1 && input.equals("y")) {
-                return true;
-            } else if (input.length() == 1 && input.equals("n")) {
-                return false;
-            } else {
-                System.out.println("Invalid input. Please answer 'y' or 'n'.");
-            }
-        }
-    }
-
-    // method to get the user's annual salary, returning double
-    private double getAnnualSalary(Scanner scanner){
-        double salary = 0;
-        boolean validInput = false;
-        while (!validInput) {
-            System.out.println("Enter your annual salary (as a positive number):");
-            if (scanner.hasNextDouble()) {
-                salary = scanner.nextDouble();
-                if (salary > 0) {
-                    validInput = true;
-                } else {
-                    System.out.println("Invalid input. Please enter a correct number.");
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // clear input
-            }
-        }
-        return salary;
-    }
-
-    // method to get crypto buying price
-    private double getBuyingPrice(Scanner scanner){
-        double buyingPrice = 0;
-        boolean validInput = false;
-        while (!validInput) {
-            System.out.println("Enter your buying price of the cryptocurrency:");
-            if (scanner.hasNextDouble()){
-                buyingPrice = scanner.nextDouble();
-                if (buyingPrice > 0) {
-                    validInput = true;
-                } else {
-                    System.out.println("Invalid input. Please enter a correct number.");
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // clear input
-            }
-        }
-        return buyingPrice;
-    }
-
-    // method to get crypto selling price & check if sellingPrice is greater than buying price
-    private double getSellingPrice(Scanner scanner, double buyingPrice){
-        double sellingPrice = 0;
-        boolean validInput = false;
-        while (!validInput){
-            System.out.println("Enter the selling price of th cryptocurrency");
-            System.out.println("It must greater than the buying price:");
-            if (scanner.hasNextDouble()){
-                sellingPrice = scanner.nextDouble();
-                if (sellingPrice > buyingPrice) {
-                    validInput = true;
-                } else {
-                    System.out.println("Invalid input. The selling price must be greater than the buying price.");
-                }
-            } else {
-                System.out.println("Invalid input. Please a enter number");
-                scanner.next(); // clear input
-            }
-        }
-        return sellingPrice;
-    }
-
-    // method to get holding years
-    private int getYears(Scanner scanner){
-        int years = 0;
-        boolean validInput = false;
-        while (!validInput){
-            System.out.println("How many years have you held these cryptocurrencies? (Enter a Integer number)");
-            if (scanner.hasNextInt()){
-                years = scanner.nextInt();
-                if (years > 0){
-                    validInput = true;
-                } else {
-                    System.out.println("Invalid input. The number must be greater than 0");
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a number");
-                scanner.next(); // clear input
-            }
-        }
-        return years;
-    }
-
     // output Details, CGT, CRYPTOCURRENCY
     private void outputDetails(String name, boolean resident, double annualSalary
             , double buyingPrice, double sellingPrice, int years){
@@ -293,9 +208,9 @@ public class CgtInterface {
     private double getInitialInvestment(Scanner scanner) {
         double year1Deposit;
         do {
-            System.out.println("Enter the amount you want to invest in the first year (cannot more than $" + user.getActualProfit() + "): ");
+            System.out.println("Enter the amount you want to invest in the first year: ");
             while (!scanner.hasNextDouble()) {
-                System.out.println("Invalid input../target/release/raytracer data/test_scene.json out.pngPlease enter a positive number.");
+                System.out.println("Invalid input. Please enter a positive number.");
                 scanner.next(); // to move scanner cursor to the next line
             }
             year1Deposit = scanner.nextDouble();

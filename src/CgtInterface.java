@@ -90,18 +90,22 @@ public class CgtInterface {
     private double getPositiveDoubleInput(String prompt) {
         double input = 0.0;
         boolean valid = false;
-        while (!valid){
+        while (!valid) {
             System.out.println(prompt);
-            try {
+            if (scanner.hasNextDouble()) {
                 input = scanner.nextDouble();
-                if (input > 0)
+                if (input > 0) {
                     valid = true;
-                else
-                    System.out.println("Input must be a positive number.");
-            } catch (InputMismatchException e) {
+                } else {
+                    System.out.println("Input must be a positive number. Please try again.");
+                    scanner.nextLine();
+                }
+            } else {
                 System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
             }
         }
+        // clear newline character
         scanner.nextLine();
         return input;
     }

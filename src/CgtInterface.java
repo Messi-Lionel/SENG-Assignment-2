@@ -5,9 +5,10 @@ package src;
  */
 import java.util.List;
 import java.util.InputMismatchException;
-import java.text.DecimalFormat;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 public class CgtInterface {
@@ -118,7 +119,7 @@ public class CgtInterface {
         }
         users.add(newUser);
         System.out.println("User added successfully!" + "\n");
-
+        writeUsersToFile(); // Update the file with the latest users list
     }
     // delete user
     private void deleteUser() {
@@ -213,6 +214,40 @@ public class CgtInterface {
             }
         }
     }
+
+    // function that can write all user details in a txt file
+    private void writeUsersToFile() {
+        String filename = "users_details.txt";
+
+        try (FileWriter writer = new FileWriter(filename, false)) {
+            for (User user : users) {
+                writer.write("Name: " + user.getName() + "\n");
+                writer.write("Resident: " + (user.isResident() ? "Yes" : "No") + "\n");
+                writer.write("Annual Salary: $" + String.format("%.2f", user.getAnnualSalary()) + "\n");
+                writer.write("Actual Profit: $" + String.format("%.2f", user.getActualProfit()) + "\n");
+
+                List<Investment> investments = user.getInvestments();
+                writer.write("Number of investments: " + investments.size() + "\n");
+                for (Investment investment : investments) {
+                    Investment.InvestmentResult result = investment.calcInvestment();
+                    writer.write("\t====== INVESTMENT PROFIT ======\n");
+                    writer.write("\tYear\tYearly Profit\tTotal Profit\n");
+                    double totalProfitAfterYear2 = result.year1Profit + result.year2Profit;
+                    double totalProfitAfterYear3 = totalProfitAfterYear2 + result.year3Profit;
+                    writer.write(String.format("\t1\t$%.2f\t\t$%.2f\n", result.year1Profit, result.year1Profit));
+                    writer.write(String.format("\t2\t$%.2f\t\t$%.2f\n", result.year2Profit, totalProfitAfterYear2));
+                    writer.write(String.format("\t3\t$%.2f\t\t$%.2f\n", result.year3Profit, totalProfitAfterYear3));
+                    writer.write(String.format("\tTotal Investment Profit: $%.2f\n", result.totalProfit));
+                }
+
+                writer.write("\n"); // Add an empty line for readability
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file: " + e.getMessage());
+        }
+    }
+
+
 
     /*
         all error handling functions

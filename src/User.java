@@ -3,6 +3,8 @@ package src;
  *Student No: C3434681, C3494501
  *Date: 26-03-2024
  */
+import java.util.ArrayList;
+import java.util.List;
 public class User{
 
     private String name;
@@ -15,6 +17,7 @@ public class User{
     private double capitalGainsTax;
     private double actualProfit;
     private double taxRate;
+    private List<Investment> investments;
 
     // CGT calculation method
     public void calcCgt() {
@@ -27,6 +30,10 @@ public class User{
 
         capitalGainsTax = taxRate * profitForCgt;
         actualProfit = profitForCgt - capitalGainsTax;
+    }
+
+    public User() {
+        this.investments = new ArrayList<>();
     }
 
     private double calculateTaxRate(double income, boolean isResident) {
@@ -43,33 +50,73 @@ public class User{
         }
     }
 
-    // get value from Cgtinterface class
-    public void setName(String name) {
-        this.name = name;
+    // investment list
+    public boolean addInvestment(Investment investment) {
+        if (this.investments.size() < 2) {
+            this.investments.add(investment);
+            return true;
+        } else {
+            System.out.println("User can have at most two investments.");
+            return false;
+        }
+    }
+
+
+    // get all users investment
+    public List<Investment> getInvestments() {
+        return this.investments;
     }
 
     public void setInvestAccount(Investment investAccount) {
         this.investAccount = investAccount;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getAnnualSalary() {
+        return annualSalary;
+    }
+
     public void setAnnualSalary(double annualSalary) {
         this.annualSalary = annualSalary;
+    }
+
+    public boolean isResident() {
+        return resident;
+    }
+
+    public void setResident(boolean resident) {
+        this.resident = resident;
+    }
+
+    public double getBuyingPrice() {
+        return buyingPrice;
     }
 
     public void setBuyingPrice(double buyingPrice) {
         this.buyingPrice = buyingPrice;
     }
 
+    public double getSellingPrice() {
+        return sellingPrice;
+    }
+
     public void setSellingPrice(double sellingPrice) {
         this.sellingPrice = sellingPrice;
     }
 
-    public void setYears(int years) {
-        this.years = years;
+    public int getYears() {
+        return years;
     }
 
-    public void setResident(boolean resident) {
-        this.resident = resident;
+    public void setYears(int years) {
+        this.years = years;
     }
 
     public void setInvestCoinSelection(int coinSelection) {
@@ -89,6 +136,7 @@ public class User{
     }
 
     // Getters to access the results for display in CgtInterface
+
     public double getTaxRate() {
         return taxRate;
     }

@@ -1,4 +1,4 @@
-# Seng - assignment 2
+# SENG - assignment 2
 
 This programme is an add-on to assignment1.
 

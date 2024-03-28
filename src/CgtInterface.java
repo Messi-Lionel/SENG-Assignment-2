@@ -70,38 +70,37 @@ public class CgtInterface {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-
         scanner.nextLine();
 
+        // ask user basic information
         System.out.println("Enter user's name: ");
         newUser.setName(scanner.nextLine().trim());
-
         newUser.setAnnualSalary(getPositiveDoubleInput("Enter your annual salary: "));
-
         System.out.println("Are you a resident? (yes/no)");
         newUser.setResident(getYesNoInput());
-
         newUser.setBuyingPrice(getPositiveDoubleInput("Enter buying price of the cryptocurrency:"));
-
         newUser.setSellingPrice(getSellingPriceInput("Enter selling price of the cryptocurrency:", newUser.getBuyingPrice()));
-
         newUser.setYears(getPositiveIntegerInput("Enter the number of years cryptocurrency is held:"));
-
         newUser.calcCgt();
 
+        // ask for investment
         System.out.println("Do you want to add an investment? (yes/no):");
         if (getYesNoInput()) {
-            double year1Deposit = getInitialInvestment(scanner);
-            double year2Deposit = getYearlyInvestment(scanner, 1);
-            double year3Deposit = getYearlyInvestment(scanner, 2);
-            int coinSelection = getCryptoCurrencySelection(scanner);
-            user.setInvestCoinSelection(coinSelection);
-
-            // Initialize the investment account
-            Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, user.getInvestCoinSelection());
-            newUser.addInvestment(investment);
+            System.out.println("How many investments do you want to add? (1 or 2)");
+            int numInvestment = getPositiveIntegerInput("Enter number of investments: (1 or 2)");
+            for (int i = 0; i < numInvestment; i++) {
+                double year1Deposit = getInitialInvestment(scanner);
+                double year2Deposit = getYearlyInvestment(scanner, 1);
+                double year3Deposit = getYearlyInvestment(scanner, 2);
+                int coinSelection = getCryptoCurrencySelection(scanner);
+                Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, coinSelection);
+                boolean added = newUser.addInvestment(investment);
+                if (!added) {
+                    System.out.println("Faild to add, investment, user can have most two investments.");
+                    break;
+                }
+            }
         }
-
         users.add(newUser);
         System.out.println("User added successfully.");
 

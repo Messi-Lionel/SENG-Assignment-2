@@ -106,7 +106,7 @@ public class CgtInterface {
 
     }
 
-    // error handing - PositiveDoubleInput
+    // error handling - PositiveDouble
     private double getPositiveDoubleInput(String prompt) {
         double input = 0.0;
         boolean valid = false;
@@ -130,6 +130,7 @@ public class CgtInterface {
         return input;
     }
 
+    // error handling - boolean
     private boolean getYesNoInput() {
         String input;
         while (true) {
@@ -143,6 +144,7 @@ public class CgtInterface {
         }
     }
 
+    // error handling - PositiveInteger
     private int getPositiveIntegerInput(String prompt) {
         int input = 0;
         while (true) {
@@ -163,6 +165,7 @@ public class CgtInterface {
         return input;
     }
 
+    // error handling - make sure selling price is greater than buying price
     private double getSellingPriceInput(String prompt, double buyingPrice) {
         double sellingPrice = 0.0;
         do {

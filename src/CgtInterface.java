@@ -223,11 +223,6 @@ public class CgtInterface {
         return year1Deposit;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
     private double getYearlyInvestment(Scanner scanner, int year) {
         double yearlyInvestment;
         do {

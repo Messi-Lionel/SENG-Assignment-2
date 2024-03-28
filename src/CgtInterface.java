@@ -26,12 +26,12 @@ public class CgtInterface {
         while (true) {
             System.out.println("==============CGT CALCULATOR==============");
             System.out.println("Please Select option:");
-            System.out.println("(1). Add user and process");
+            System.out.println("(1). Add user");
             System.out.println("(2). Delete user");
-            System.out.println("(3). Display user");
+            System.out.println("(3). Check specific user's details");
             System.out.println("(4). Display all users");
             System.out.println("(5). Exit");
-            System.out.println("==========================================");
+            System.out.println("============ENTER NUMBER BELOW============");
             int choice = scanner.nextInt();
 
             switch (choice) {
@@ -45,7 +45,7 @@ public class CgtInterface {
                     deleteUser();
                     break;
                 case 3:
-                    // TODO: displaying a specific user
+                    displayUser();
                     break;
                 case 4:
                     // TODO: displaying all user
@@ -60,7 +60,12 @@ public class CgtInterface {
         }
     }
 
-    // add user function
+    public static void main(String[] args){
+        CgtInterface cgtInterface = new CgtInterface();
+        cgtInterface.run();
+    }
+
+    // add user
     private void addUserAndProcess() {
         User newUser = new User();
 
@@ -105,7 +110,7 @@ public class CgtInterface {
             }
         }
         users.add(newUser);
-        System.out.println("User added successfully!");
+        System.out.println("User added successfully!" + "\n");
 
     }
 
@@ -134,7 +139,59 @@ public class CgtInterface {
             System.out.println("User not found");
     }
 
-    // error handling - PositiveDouble
+    private void displayUser() {
+        System.out.println("Enter the name of the user to display: ");
+        String name = scanner.next();
+
+        for (User user : users) {
+            if (user.getName().equalsIgnoreCase(name)) {
+                System.out.println("============USER DETAILS============");
+                System.out.println("NAME: " + user.getName());
+                System.out.println("ANNUAL SALARY: $" + user.getAnnualSalary());
+                System.out.println("RESIDENT: " + (user.isResident() ? "YES" : "NO") + "\n");
+                System.out.println("- CRYPTOCURRENCY: ");
+                System.out.println("BUYING PRICE: $" + String.format("%.2f", user.getBuyingPrice()));
+                System.out.println("SELLING PRICE: $" + String.format("%.2f", user.getSellingPrice()));
+                System.out.println("YEARS: " + user.getYears() + "\n");
+                System.out.println("- Capital Gains Tax: ");
+                System.out.println("TAX RATE: " + user.getTaxRate());
+                System.out.println("CGT: $" + String.format("%.2f", user.getCapitalGainsTax()));
+                System.out.println("PROFIT: $" + String.format("%.2f", user.getActualProfit()) + "\n");
+
+                // Check if the user has investments and display investment results
+                List<Investment> investments = user.getInvestments();
+                if (!investments.isEmpty()) {
+                    int investmentCounter = 1;
+                    for (Investment investment : investments) {
+                        Investment.InvestmentResult result = investment.calcInvestment();
+                        System.out.println("- INVESTMENT " + investmentCounter + " PROFIT");
+                        System.out.println("Year\tYearly Profit\tTotal Profit");
+                        System.out.printf("1\t\t$%.2f\t\t\t$%.2f\n", result.year1Profit, result.year1Profit);
+                        double totalProfitAfterYear2 = result.year1Profit + result.year2Profit;
+                        System.out.printf("2\t\t$%.2f\t\t\t$%.2f\n", result.year2Profit, totalProfitAfterYear2);
+                        double totalProfitAfterYear3 = totalProfitAfterYear2 + result.year3Profit;
+                        System.out.printf("3\t\t$%.2f\t\t\t$%.2f\n", result.year3Profit, totalProfitAfterYear3);
+                        System.out.println("Total Investment Profit: $" + String.format("%.2f", result.totalProfit) + "\n");
+                        investmentCounter++;
+                    }
+                } else {
+                    System.out.println("No investments.");
+                }
+                System.out.println("====================================\n\n");
+                return; // Exit the method after displaying the user info
+            }
+        }
+        // If we reach this point, the user was not found
+        System.out.println("User not found.");
+    }
+
+    /*
+        all error handling functions
+            - PositiveDouble value
+            - Boolean
+            - PositiveInteger
+            - make sure selling price is greater than buying price
+     */
     private double getPositiveDoubleInput(String prompt) {
         double input = 0.0;
         boolean valid = false;
@@ -157,8 +214,6 @@ public class CgtInterface {
         scanner.nextLine();
         return input;
     }
-
-    // error handling - boolean
     private boolean getYesNoInput() {
         String input;
         while (true) {
@@ -171,8 +226,6 @@ public class CgtInterface {
                 System.out.println("Invalid input. Please enter 'yes' 'y' or 'no' 'n'");
         }
     }
-
-    // error handling - PositiveInteger
     private int getPositiveIntegerInput(String prompt) {
         int input = 0;
         while (true) {
@@ -192,8 +245,6 @@ public class CgtInterface {
         scanner.nextLine(); // Consume newline
         return input;
     }
-
-    // error handling - make sure selling price is greater than buying price
     private double getSellingPriceInput(String prompt, double buyingPrice) {
         double sellingPrice = 0.0;
         do {
@@ -204,37 +255,12 @@ public class CgtInterface {
         return sellingPrice;
     }
 
-    // output Details, CGT, CRYPTOCURRENCY
-    private void outputDetails(String name, boolean resident, double annualSalary
-            , double buyingPrice, double sellingPrice, int years){
-
-        // format boolean
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
-        String residentStatus;
-        if (resident){
-            residentStatus = "YES";
-        } else {
-            residentStatus = "NO";
-        }
-
-        System.out.println("==========USER DETAILS==========");
-        System.out.println("NAME: " + name);
-        System.out.println("ANNUAL SALARY: $" + annualSalary);
-        System.out.println("RESIDENT: " + residentStatus);
-        System.out.println();
-        System.out.println("=========CRYPTOCURRENCY=========");
-        System.out.println("BUYING PRICE: $" + buyingPrice);
-        System.out.println("SELLING PRICE: $" + sellingPrice);
-        System.out.println("YEARS: " + years);
-        System.out.println();
-        System.out.println("=====CAPITAL GAINS TAX(CGT)=====");
-        System.out.println("TAX RATE: " + user.getTaxRate());
-        System.out.println("CGT: $" + df.format(user.getCapitalGainsTax()));
-        System.out.println("PROFIT: $" + user.getActualProfit());
-    }
-
-    // Methods to collect input for predicted profit calculation
+    /*
+        all the methods to collect input for investment calculation
+            - getInitialInvestment
+            - getCryptoCurrencySelection
+            - getYearlyInvestment
+     */
     private double getInitialInvestment(Scanner scanner) {
         double year1Deposit;
         do {
@@ -250,7 +276,18 @@ public class CgtInterface {
         } while (year1Deposit <= 0);
         return year1Deposit;
     }
-
+    private int getCryptoCurrencySelection(Scanner scanner) {
+        int selection;
+        do {
+            System.out.println("Select cryptocurrency:");
+            System.out.println("1. Bestcoin\n2. Simplecoin\n3. Fastcoin");
+            selection = scanner.nextInt();
+            if (selection < 1 || selection > 3) {
+                System.out.println("Invalid selection. Please choose 1, 2, or 3.");
+            }
+        } while (selection < 1 || selection > 3);
+        return selection;
+    }
     private double getYearlyInvestment(Scanner scanner, int year) {
         double yearlyInvestment;
         do {
@@ -266,38 +303,4 @@ public class CgtInterface {
         } while (yearlyInvestment < 0);
         return yearlyInvestment;
     }
-
-    private int getCryptoCurrencySelection(Scanner scanner) {
-        int selection;
-        do {
-            System.out.println("Select cryptocurrency:");
-            System.out.println("1. Bestcoin\n2. Simplecoin\n3. Fastcoin");
-            selection = scanner.nextInt();
-            if (selection < 1 || selection > 3) {
-                System.out.println("Invalid selection. Please choose 1, 2, or 3.");
-            }
-        } while (selection < 1 || selection > 3);
-        return selection;
-    }
-
-    public void displayInvestmentResults() {
-        Investment.InvestmentResult result = user.getInvestAccount().calcInvestment();
-
-        System.out.println();
-        System.out.println("====== INVESTMENT PROFIT =======");
-        System.out.println("Year\tYearly Profit\t\tTotal Profit");
-        System.out.printf("1\t\t$%.2f\t\t\t$%.2f\n", result.year1Profit, result.year1Profit);
-        double totalProfitAfterYear2 = result.year1Profit + result.year2Profit;
-        System.out.printf("2\t\t$%.2f\t\t\t$%.2f\n", result.year2Profit, totalProfitAfterYear2);
-        double totalProfitAfterYear3 = totalProfitAfterYear2 + result.year3Profit;
-        System.out.printf("3\t\t$%.2f\t\t\t$%.2f\n", result.year3Profit, totalProfitAfterYear3);
-    }
-
-    // main
-    public static void main(String[] args){
-        CgtInterface cgtInterface = new CgtInterface();
-        cgtInterface.run();
-    }
-
-
 }

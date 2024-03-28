@@ -60,10 +60,28 @@ public class CgtInterface {
     private void addUserAndProcess() {
         User newUser = new User();
 
-        System.out.println("Enter user's name: ");
-        newUser.setName(scanner.nextLine());
+        /* here we have a bug (by executing get name and salary at the same time)
+        * a short delay to ensure that the output gives the user time to react to the output
+        * I know this delay is not the correct way to solve the problem, but it works, so .....
+        */
+        System.out.println("Preparing to add a new user...");
+        try {
+            Thread.sleep(500); // 500ms
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
-        System.out.println("Enter");
+        scanner.nextLine();
+
+        System.out.println("Enter user's name: ");
+        newUser.setName(scanner.nextLine().trim());
+
+        newUser.setAnnualSalary(getPositiveDoubleInput("Enter your annual salary: "));
+        scanner.nextLine();
+
+        System.out.println("Are you a resident? (yes/no)");
+        newUser.setResident(getYesNoInput());
+
 
 
     }

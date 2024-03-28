@@ -4,6 +4,7 @@ package src;
  *Date: 26-03-2024
  */
 import java.util.List;
+import java.util.InputMismatchException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class CgtInterface {
 
     public void run() {
 
-        while (true){
+        while (true) {
             System.out.println("Select option:");
             System.out.println("1. Add user and process");
             System.out.println("2. Delete user");
@@ -30,13 +31,12 @@ public class CgtInterface {
             System.out.println("5. Exit");
             int choice = scanner.nextInt();
 
-            switch (choice){
+            switch (choice) {
                 case 1:
-                    if (users.size() < 5){
+                    if (users.size() < 5)
                         addUserAndProcess();
-                    } else {
+                    else
                         System.out.println("Cannot add more users. Maximum 5 users");
-                    }
                     break;
                 case 2:
                     // TODO: deleting user
@@ -57,15 +57,80 @@ public class CgtInterface {
         }
     }
 
-
-    private void addUserAndProcess(){
+    private void addUserAndProcess() {
         User newUser = new User();
 
         System.out.println("Enter user's name: ");
         newUser.setName(scanner.nextLine());
 
+        System.out.println("Enter");
+
 
     }
+
+    // error handing - PositiveDoubleInput
+    private double getPositiveDoubleInput(String prompt) {
+        double input = 0.0;
+        boolean valid = false;
+        while (!valid){
+            System.out.println(prompt);
+            try {
+                input = scanner.nextDouble();
+                if (input > 0)
+                    valid = true;
+                else
+                    System.out.println("Input must be a positive number.");
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+        scanner.nextLine();
+        return input;
+    }
+
+    private boolean getYesNoInput() {
+        String input;
+        while (true) {
+            input = scanner.nextLine().trim().toLowerCase();
+            if ("yes".equals(input) || "y".equals(input))
+                return true;
+            else if ("no".equals(input) || "n".equals(input))
+                return false;
+            else
+                System.out.println("Invalid input. Please enter 'yes' 'y' or 'no' 'n'");
+        }
+    }
+
+    private int getPositiveIntegerInput(String prompt) {
+        int input = 0;
+        while (true) {
+            System.out.println(prompt);
+            try {
+                input = scanner.nextInt();
+                if (input > 0) {
+                    break;
+                } else {
+                    System.out.println("Input must be a positive integer.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
+                scanner.next(); // Consume the invalid input
+            }
+        }
+        scanner.nextLine(); // Consume newline
+        return input;
+    }
+
+    private double getSellingPriceInput(String prompt, double buyingPrice) {
+        double sellingPrice = 0.0;
+        do {
+            sellingPrice = getPositiveDoubleInput(prompt);
+            if (sellingPrice <= buyingPrice)
+                System.out.println("Selling price must be greater than buying price");
+        } while (sellingPrice <= buyingPrice);
+        return sellingPrice;
+    }
+
     private static String getName(Scanner scanner){
         System.out.println("Enter your name: ");
         return scanner.nextLine();

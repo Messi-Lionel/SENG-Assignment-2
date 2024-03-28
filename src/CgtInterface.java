@@ -1,66 +1,71 @@
 package src;
+/*Author: (T7) Yiyuan Li, Tian zhiran
+ *Student No: C3434681, C3494501
+ *Date: 26-03-2024
+ */
+import java.util.List;
 import java.text.DecimalFormat;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 
 public class CgtInterface {
 
     private final User user;
+    private Scanner scanner = new Scanner(System.in);
+    private List<User> users = new ArrayList<>();
 
     public CgtInterface() {
         this.user = new User();
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-        // calling method, get users name
-        String name = getName(scanner);
-        user.setName(name);
-        // calling method, get users annualSalary
-        double salary = getAnnualSalary(scanner);
-        user.setAnnualSalary(salary);
 
-        // calling method, ask user is resident or not
-        boolean isResident = getResident(scanner);
-        user.setResident(isResident);
+        while (true){
+            System.out.println("Select option:");
+            System.out.println("1. Add user and process");
+            System.out.println("2. Delete user");
+            System.out.println("3. Display user");
+            System.out.println("4. Display all users");
+            System.out.println("5. Exit");
+            int choice = scanner.nextInt();
 
-        // calling method, ask user for buying price
-        double buyingPrice = getBuyingPrice(scanner);
-        user.setBuyingPrice(buyingPrice);
+            switch (choice){
+                case 1:
+                    if (users.size() < 5){
+                        addUserAndProcess();
+                    } else {
+                        System.out.println("Cannot add more users. Maximum 5 users");
+                    }
+                    break;
+                case 2:
+                    // TODO: deleting user
+                    break;
+                case 3:
+                    // TODO: displaying a specific user
+                    break;
+                case 4:
+                    // TODO: displaying all user
+                case 5:
+                    System.out.println("Exiting program...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
 
-        // calling method, ask user for selling price
-        // pass buyingPrice to method, check if sellingPrice is greater than buying price
-        double sellingPrice = getSellingPrice(scanner, buyingPrice);
-        user.setSellingPrice(sellingPrice);
-
-        // get years
-        int years = getYears(scanner);
-        user.setYears(years);
-
-        user.calcCgt(); // Calculate CGT
-
-        // Collect investment details after setting selling price
-        double year1Deposit = getInitialInvestment(scanner);
-        double year2Deposit = getYearlyInvestment(scanner, 1);
-        double year3Deposit = getYearlyInvestment(scanner, 2);
-        int coinSelection = getCryptoCurrencySelection(scanner);
-        user.setInvestCoinSelection(coinSelection);
-
-        // Initialize the investment account
-        Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, user.getInvestCoinSelection());
-        user.setInvestAccount(investment);
-
-        // Perform calculations
-        Investment.InvestmentResult result = investment.calcInvestment(); // Calculate investment results
-
-        // Display results
-        outputDetails(name, isResident, salary, buyingPrice, sellingPrice, years);
-        displayInvestmentResults();
-
-        scanner.close();
-
+        }
     }
 
+
+    private void addUserAndProcess(){
+        User newUser = new User();
+
+        System.out.println("Enter user's name: ");
+        newUser.setName(scanner.nextLine());
+
+
+    }
     private static String getName(Scanner scanner){
         System.out.println("Enter your name: ");
         return scanner.nextLine();
@@ -203,7 +208,7 @@ public class CgtInterface {
         do {
             System.out.println("Enter the amount you want to invest in the first year (cannot more than $" + user.getActualProfit() + "): ");
             while (!scanner.hasNextDouble()) {
-                System.out.println("Invalid input. Please enter a positive number.");
+                System.out.println("Invalid input../target/release/raytracer data/test_scene.json out.pngPlease enter a positive number.");
                 scanner.next(); // to move scanner cursor to the next line
             }
             year1Deposit = scanner.nextDouble();

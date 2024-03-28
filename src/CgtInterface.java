@@ -24,6 +24,7 @@ public class CgtInterface {
 
         // loop
         while (true) {
+            // main menu
             System.out.println("==============CGT CALCULATOR==============");
             System.out.println("Please Select option:");
             System.out.println("(1). Add user");
@@ -48,7 +49,8 @@ public class CgtInterface {
                     displayUser();
                     break;
                 case 4:
-                    // TODO: displaying all user
+                    displayAllUsers();
+                    break;
                 case 5:
                     System.out.println("Exiting program...");
                     scanner.close();
@@ -65,7 +67,12 @@ public class CgtInterface {
         cgtInterface.run();
     }
 
-    // add user
+    /*
+        - Add user
+        - Delete user
+        - Check specific user's details
+        - Display all users
+     */
     private void addUserAndProcess() {
         User newUser = new User();
 
@@ -113,7 +120,6 @@ public class CgtInterface {
         System.out.println("User added successfully!" + "\n");
 
     }
-
     // delete user
     private void deleteUser() {
         System.out.println("Enter the name of the user to delete:");
@@ -138,7 +144,6 @@ public class CgtInterface {
         else
             System.out.println("User not found");
     }
-
     private void displayUser() {
         System.out.println("Enter the name of the user to display: ");
         String name = scanner.next();
@@ -183,6 +188,30 @@ public class CgtInterface {
         }
         // If we reach this point, the user was not found
         System.out.println("User not found.");
+    }
+    private void displayAllUsers() {
+        if (users.isEmpty()) {
+            System.out.println("No users.");
+        } else {
+            for (int i = 0; i < users.size(); i++) {
+                User user = users.get(i);
+                System.out.println("==============ALL USERS==============");
+                System.out.println("User " + (i + 1) + ":");
+                System.out.println("\tName: " + user.getName());
+                System.out.println("\tResident: " + (user.isResident() ? "Yes" : "No"));
+                System.out.println("\tAnnual Salary: $" + String.format("%.2f", user.getAnnualSalary()));
+                System.out.println("\tActual Profit: $" + String.format("%.2f", user.getActualProfit()));
+
+                // Display the number of investments
+                int numberOfInvestments = user.getInvestments().size();
+                if (numberOfInvestments > 0) {
+                    System.out.println("\tNumber of investments: " + numberOfInvestments);
+                } else {
+                    System.out.println("\tNo investment");
+                }
+                System.out.println(); // Add an empty line for better readability
+            }
+        }
     }
 
     /*

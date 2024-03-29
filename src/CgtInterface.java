@@ -14,28 +14,25 @@ import java.io.IOException;
 public class CgtInterface {
 
     private final User user;
-    private Scanner scanner = new Scanner(System.in);
-    private List<User> users = new ArrayList<>();
-
-    public CgtInterface() {
-        this.user = new User();
-    }
+    // make Scanner private, cuz core principles of object-oriented programming is encapsulation
+    // also for Security and Integrity
+    private final Scanner scanner = new Scanner(System.in);
+    // create a new array list for user
+    private final List<User> users = new ArrayList<>();
 
     public void run() {
-
         // loop
         while (true) {
             // main menu
-            System.out.println("==============CGT CALCULATOR==============");
             System.out.println("Please Select option:");
             System.out.println("(1). Add user");
             System.out.println("(2). Delete user");
             System.out.println("(3). Check specific user's details");
             System.out.println("(4). Display all users");
             System.out.println("(5). Exit");
-            System.out.println("============ENTER NUMBER BELOW============");
             int choice = scanner.nextInt();
 
+            // user selection
             switch (choice) {
                 case 1:
                     if (users.size() < 5)
@@ -63,6 +60,10 @@ public class CgtInterface {
         }
     }
 
+    public CgtInterface() {
+        this.user = new User();
+    }
+    // main function
     public static void main(String[] args){
         CgtInterface cgtInterface = new CgtInterface();
         cgtInterface.run();
@@ -112,7 +113,7 @@ public class CgtInterface {
                 Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, coinSelection);
                 boolean added = newUser.addInvestment(investment);
                 if (!added) {
-                    System.out.println("Faild to add, investment, user can have most two investments.");
+                    System.out.println("Faild to add investment, user can have most two investments.");
                     break;
                 }
             }
@@ -145,6 +146,7 @@ public class CgtInterface {
         else
             System.out.println("User not found");
     }
+    // display specific user's info
     private void displayUser() {
         System.out.println("Enter the name of the user to display: ");
         String name = scanner.next();
@@ -190,6 +192,7 @@ public class CgtInterface {
         // If we reach this point, the user was not found
         System.out.println("User not found.");
     }
+    // display all the users we have
     private void displayAllUsers() {
         if (users.isEmpty()) {
             System.out.println("No users.");
@@ -217,10 +220,16 @@ public class CgtInterface {
 
     // function that can write all user details in a txt file
     private void writeUsersToFile() {
+        // create a new txt file
         String filename = "users_details.txt";
 
         try (FileWriter writer = new FileWriter(filename, false)) {
             for (User user : users) {
+            /*
+                for (User user : users) :
+                next element in the users collection is assigned to the variable user, which is of type User
+                this means that inside the loop, user represents the current User object being processed.
+             */
                 writer.write("Name: " + user.getName() + "\n");
                 writer.write("Resident: " + (user.isResident() ? "Yes" : "No") + "\n");
                 writer.write("Annual Salary: $" + String.format("%.2f", user.getAnnualSalary()) + "\n");
@@ -239,15 +248,16 @@ public class CgtInterface {
                     writer.write(String.format("\t3\t$%.2f\t\t$%.2f\n", result.year3Profit, totalProfitAfterYear3));
                     writer.write(String.format("\tTotal Investment Profit: $%.2f\n", result.totalProfit));
                 }
-
                 writer.write("\n"); // Add an empty line for readability
             }
         } catch (IOException e) {
+            /*
+                (IOException e) means that the catch block is designed to handle exceptions of type IOException
+                e: is the exception object
+             */
             System.out.println("An error occurred while writing to the file: " + e.getMessage());
         }
     }
-
-
 
     /*
         all error handling functions
@@ -278,6 +288,7 @@ public class CgtInterface {
         scanner.nextLine();
         return input;
     }
+    // getYes or no
     private boolean getYesNoInput() {
         String input;
         while (true) {
@@ -290,8 +301,9 @@ public class CgtInterface {
                 System.out.println("Invalid input. Please enter 'yes' 'y' or 'no' 'n'");
         }
     }
+    // PositiveInteger
     private int getPositiveIntegerInput(String prompt) {
-        int input = 0;
+        int input;
         while (true) {
             System.out.println(prompt);
             try {
@@ -309,8 +321,9 @@ public class CgtInterface {
         scanner.nextLine(); // Consume newline
         return input;
     }
+    // make sure selling price is greater than buying price
     private double getSellingPriceInput(String prompt, double buyingPrice) {
-        double sellingPrice = 0.0;
+        double sellingPrice;
         do {
             sellingPrice = getPositiveDoubleInput(prompt);
             if (sellingPrice <= buyingPrice)

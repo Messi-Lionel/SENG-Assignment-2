@@ -26,34 +26,55 @@ public class CgtInterface {
             // main menu
             System.out.println("Please Select option:");
             System.out.println("(1). Add user");
-            System.out.println("(2). Delete user");
-            System.out.println("(3). Check specific user's details");
-            System.out.println("(4). Display all users");
-            System.out.println("(5). Delete user's investment");
-            System.out.println("(6). Exit");
+            System.out.println("(2). Add user's investment");
+            System.out.println("(3). Delete user");
+            System.out.println("(4). Delete user's investment");
+            System.out.println("(5). Check specific user's details");
+            System.out.println("(6). Display all users");
+            System.out.println("(7). Exit");
             int choice = scanner.nextInt();
 
             // user selection
             switch (choice) {
                 case 1:
+                // add user
                     if (users.size() < 5)
                         addUserAndProcess();
                     else
                         System.out.println("Cannot add more users. Maximum 5 users");
                     break;
                 case 2:
+                // Add investment to a user
+                    if (!users.isEmpty()) {
+                        System.out.println("Enter the name of the user to add investment to:");
+                        String userName = scanner.next().trim();
+                        User userToAddInvestment = findUserByName(userName);
+                        if (userToAddInvestment != null) {
+                            addInvestmentToUser(userToAddInvestment);
+                        } else {
+                            System.out.println("User not found.");
+                        }
+                    } else {
+                        System.out.println("There are no users to add investments to.");
+                    }
+                case 3:
+                // delete user
                     deleteUser();
                     break;
-                case 3:
-                    displayUser();
-                    break;
                 case 4:
-                    displayAllUsers();
-                    break;
-                case 5:
+                // delete investment
                     deleteInvestment();
                     break;
+                case 5:
+                // display user
+                    displayUser();
+                    break;
                 case 6:
+                // display all users
+                    displayAllUsers();
+                    break;
+                case 7:
+                // exit
                     System.out.println("Exiting program...");
                     scanner.close();
                     return;
@@ -67,15 +88,19 @@ public class CgtInterface {
     public CgtInterface() {
         this.user = new User();
     }
+    
     // main function
     public static void main(String[] args){
         CgtInterface cgtInterface = new CgtInterface();
         cgtInterface.run();
     }
 
+
+
     /*
         - Add user
         - Delete user
+        - Add user's investment
         - Delete user's investment
         - Check specific user's details
         - Display all users
@@ -106,27 +131,43 @@ public class CgtInterface {
         newUser.setYears(getPositiveIntegerInput("Enter the number of years cryptocurrency is held:"));
         newUser.calcCgt();
 
-        // ask for investment
-        System.out.println("Do you want to add an investment? (yes/no):");
-        if (getYesNoInput()) {
-        int investmentCount = getPositiveIntegerInput("Enter number of investments: (1 or 2)");
-            for (int i = 0; i < investmentCount; i++) {
-                double year1Deposit = getInitialInvestment(scanner);
-                double year2Deposit = getYearlyInvestment(scanner, 1);
-                double year3Deposit = getYearlyInvestment(scanner, 2);
-                int coinSelection = getCryptoCurrencySelection(scanner);
-                Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, coinSelection);
-                boolean added = newUser.addInvestment(investment);
-                if (!added) {
-                    System.out.println("Faild to add investment, user can have most two investments.");
-                    break;
-                }
-            }
-        }
         users.add(newUser);
         System.out.println("User added successfully!" + "\n");
         writeUsersToFile(); // Update the file with the latest users list
     }
+
+    // add user's investment
+    private void addInvestmentToUser(User user) {
+        // Check if the user already has two investments
+        if (user.getInvestments().size() >= 2) {
+            System.out.println("This user already has the maximum of two investments.");
+            return; // Exit the method since no more investments can be added
+        }
+        double maxInvestable = calculateMaxInvestable(user);
+        System.out.println("Maximum amount avaliable to invest: $" + String.format("%.2f", maxInvestable));
+        if (maxInvestable <= 0) {
+            System.out.println("No funds available for investment.");
+            return;
+        }
+
+        System.out.println("Do you want to invest? (yes/no)");
+        if (!getYesNoInput()) {
+            double year1Deposit = getInitialInvestment(scanner, maxInvestable);
+            double year2Deposit = getYearlyInvestment(scanner, 1);
+            double year3Deposit = getYearlyInvestment(scanner, 2);
+            int coinSelection = getCryptoCurrencySelection(scanner);
+            Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, coinSelection);
+
+            boolean added = user.addInvestment(investment);
+            if (!added) {
+                System.out.println("Failed to add investment, user can have at most two investments.");
+            } else {
+                System.out.println("Investment added successfully!");
+                writeUsersToFile(); // Update the file with the latest users list
+            }
+        }
+    }
+
     // delete user
     private void deleteUser() {
         System.out.println("Enter the name of the user to delete:");
@@ -151,6 +192,7 @@ public class CgtInterface {
         else
             System.out.println("User not found");
     }
+
     // display specific user's info
     private void displayUser() {
         System.out.println("Enter the name of the user to display: ");
@@ -197,6 +239,7 @@ public class CgtInterface {
         // If we reach this point, the user was not found
         System.out.println("User not found.");
     }
+    
     // display all the users we have
     private void displayAllUsers() {
         if (users.isEmpty()) {
@@ -305,7 +348,7 @@ public class CgtInterface {
     }
 
     /*
-        all error handling functions
+        all error handling methods
             - PositiveDouble value
             - Boolean
             - PositiveInteger
@@ -333,6 +376,7 @@ public class CgtInterface {
         scanner.nextLine();
         return input;
     }
+
     // getYes or no
     private boolean getYesNoInput() {
         String input;
@@ -346,6 +390,7 @@ public class CgtInterface {
                 System.out.println("Invalid input. Please enter 'yes' 'y' or 'no' 'n'");
         }
     }
+
     // PositiveInteger
     private int getPositiveIntegerInput(String prompt) {
         int input;
@@ -366,6 +411,7 @@ public class CgtInterface {
         scanner.nextLine(); // Consume newline
         return input;
     }
+
     // make sure selling price is greater than buying price
     private double getSellingPriceInput(String prompt, double buyingPrice) {
         double sellingPrice;
@@ -387,13 +433,21 @@ public class CgtInterface {
         return null;
     }
 
+    // max investable amount
+    private double calculateMaxInvestable(User user) {
+        double totalInvestedInFirstYear = user.getInvestments().stream()
+                                               .mapToDouble(Investment::getYear1Deposit)
+                                               .sum();
+        return user.getActualProfit() - totalInvestedInFirstYear;
+    }
+    
     /*
         all the methods to collect input for investment calculation
             - getInitialInvestment
             - getCryptoCurrencySelection
             - getYearlyInvestment
      */
-    private double getInitialInvestment(Scanner scanner) {
+    private double getInitialInvestment(Scanner scanner, double maxInvestable) {
         double year1Deposit;
         do {
             System.out.println("Enter the amount you want to invest in the first year: ");
@@ -402,12 +456,13 @@ public class CgtInterface {
                 scanner.next(); // to move scanner cursor to the next line
             }
             year1Deposit = scanner.nextDouble();
-            if (year1Deposit <= 0) {
+            if (year1Deposit <= 0 || year1Deposit > maxInvestable) {
                 System.out.println("Invalid input. The amount must be greater than 0.");
             }
         } while (year1Deposit <= 0);
         return year1Deposit;
     }
+
     private int getCryptoCurrencySelection(Scanner scanner) {
         int selection;
         do {
@@ -420,6 +475,7 @@ public class CgtInterface {
         } while (selection < 1 || selection > 3);
         return selection;
     }
+
     private double getYearlyInvestment(Scanner scanner, int year) {
         double yearlyInvestment;
         do {

@@ -52,6 +52,11 @@ public class Investment {
     public int getCoinSelection() {
         return this.coinSelection;
     }
+    
+    public double getYear1Deposit() {
+        return this.year1Deposit;
+    }
+
     public void setCoinSelection(int coinSelection) {
         this.coinSelection = coinSelection;
     }

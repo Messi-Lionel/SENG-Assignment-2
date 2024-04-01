@@ -463,12 +463,16 @@ public class CgtInterface {
                 scanner.next(); // to move scanner cursor to the next line
             }
             year1Deposit = scanner.nextDouble();
-            if (year1Deposit <= 0 || year1Deposit > maxInvestable) {
-                System.out.println("Invalid input. The amount must be greater than 0.");
+            scanner.nextLine(); // Consume the newline character after the number
+            if (year1Deposit <= 0) {
+                System.out.println("Invalid input. The amount must be a positive number.");
+            } else if (year1Deposit > maxInvestable) {
+                System.out.println("Invalid input. The amount cannot exceed $" + String.format("%.2f", maxInvestable) + ".");
             }
-        } while (year1Deposit <= 0);
+        } while (year1Deposit <= 0 || year1Deposit > maxInvestable);
         return year1Deposit;
     }
+    
 
     private int getCryptoCurrencySelection(Scanner scanner) {
         int selection;

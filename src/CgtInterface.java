@@ -29,7 +29,8 @@ public class CgtInterface {
             System.out.println("(2). Delete user");
             System.out.println("(3). Check specific user's details");
             System.out.println("(4). Display all users");
-            System.out.println("(5). Exit");
+            System.out.println("(5). Delete user's investment");
+            System.out.println("(6). Exit");
             int choice = scanner.nextInt();
 
             // user selection
@@ -50,6 +51,9 @@ public class CgtInterface {
                     displayAllUsers();
                     break;
                 case 5:
+                    deleteInvestment();
+                    break;
+                case 6:
                     System.out.println("Exiting program...");
                     scanner.close();
                     return;
@@ -72,6 +76,7 @@ public class CgtInterface {
     /*
         - Add user
         - Delete user
+        - Delete user's investment
         - Check specific user's details
         - Display all users
      */
@@ -259,6 +264,46 @@ public class CgtInterface {
         }
     }
 
+    // delete user's investment
+    private void deleteInvestment() {
+        System.out.println("Enter the name of the user to delete investment:");
+        String name = scanner.next(); // read the user's name. using next() instead of nextLine() to avoid reading the newline character
+        User user = findUserByName(name); // call the findUserByName method to find the user
+        if (user == null) {
+            System.out.println("User not found."); // if user not found, show this message
+            return;
+        }
+
+        // check if the user has investments
+        if (user.getInvestments().isEmpty()) {
+            System.out.println("No investments to delete.");
+            return;
+        }
+
+        int investmentCount = getInvestmentNumber(); // get the investment number to delete
+        if (investmentCount < 1 || investmentCount > user.getInvestments().size()) {
+            System.out.println("The investment does not exist."); // check investment number is valid
+        }
+
+        // remove the investment
+        user.getInvestments().remove(investmentCount - 1); // remove the investment from the list
+        System.out.println("Investment deleted successfully.");
+        writeUsersToFile(); // update the file with the latest users list
+    }
+
+    private int getInvestmentNumber() {
+        while (true) {
+            System.out.println("Enter the number of the investment to delete (1 or 2):");
+            int number = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+            if (number == 1 || number == 2) {
+                return number;
+            } else {
+                System.out.println("Invalid input. Please enter 1 or 2.");
+            }
+        }
+    }
+
     /*
         all error handling functions
             - PositiveDouble value
@@ -330,6 +375,16 @@ public class CgtInterface {
                 System.out.println("Selling price must be greater than buying price");
         } while (sellingPrice <= buyingPrice);
         return sellingPrice;
+    }
+
+    // methods to find user by name
+    private User findUserByName(String name) {
+        for (User user : users) {
+            if (user.getName().equalsIgnoreCase(name)) {
+                return user;
+            }
+        }
+        return null;
     }
 
     /*

@@ -1,6 +1,6 @@
-Name: 88
-Resident: No
-Annual Salary: $8717.00
-Actual Profit: $745.88
+Name: C
+Resident: Yes
+Annual Salary: $75000.00
+Actual Profit: $675.00
 Number of investments: 0
 

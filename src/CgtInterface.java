@@ -42,6 +42,9 @@ public class CgtInterface {
                         addUserAndProcess();
                     else
                         System.out.println("Cannot add more users. Maximum 5 users");
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 2:
                 // Add investment to a user
@@ -57,22 +60,37 @@ public class CgtInterface {
                     } else {
                         System.out.println("There are no users to add investments to.");
                     }
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 3:
                 // delete user
                     deleteUser();
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 4:
                 // delete investment
                     deleteInvestment();
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 5:
                 // display user
                     displayUser();
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 6:
                 // display all users
                     displayAllUsers();
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Consume the newline character
+                    scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 7:
                 // exit

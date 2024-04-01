@@ -1,0 +1,6 @@
+Name: 88
+Resident: No
+Annual Salary: $8717.00
+Actual Profit: $745.88
+Number of investments: 0
+

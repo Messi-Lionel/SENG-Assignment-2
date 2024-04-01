@@ -136,7 +136,6 @@ public class User{
     }
 
     // Getters to access the results for display in CgtInterface
-
     public double getTaxRate() {
         return taxRate;
     }

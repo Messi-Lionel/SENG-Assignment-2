@@ -57,6 +57,7 @@ public class CgtInterface {
                     } else {
                         System.out.println("There are no users to add investments to.");
                     }
+                    break;
                 case 3:
                 // delete user
                     deleteUser();
@@ -143,6 +144,7 @@ public class CgtInterface {
             System.out.println("This user already has the maximum of two investments.");
             return; // Exit the method since no more investments can be added
         }
+
         double maxInvestable = calculateMaxInvestable(user);
         System.out.println("Maximum amount avaliable to invest: $" + String.format("%.2f", maxInvestable));
         if (maxInvestable <= 0) {
@@ -151,20 +153,25 @@ public class CgtInterface {
         }
 
         System.out.println("Do you want to invest? (yes/no)");
-        if (!getYesNoInput()) {
-            double year1Deposit = getInitialInvestment(scanner, maxInvestable);
-            double year2Deposit = getYearlyInvestment(scanner, 1);
-            double year3Deposit = getYearlyInvestment(scanner, 2);
-            int coinSelection = getCryptoCurrencySelection(scanner);
-            Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, coinSelection);
+        scanner.nextLine(); // Consume the newline character
+        boolean wantsToInvest = getYesNoInput();
+        if (!wantsToInvest) {
+            System.out.println("Investment process cancelled.");
+            return; // If the user does not want to invest, exit the method
+        }
 
-            boolean added = user.addInvestment(investment);
-            if (!added) {
-                System.out.println("Failed to add investment, user can have at most two investments.");
-            } else {
-                System.out.println("Investment added successfully!");
-                writeUsersToFile(); // Update the file with the latest users list
-            }
+        double year1Deposit = getInitialInvestment(scanner, maxInvestable);
+        double year2Deposit = getYearlyInvestment(scanner, 1);
+        double year3Deposit = getYearlyInvestment(scanner, 2);
+        int coinSelection = getCryptoCurrencySelection(scanner);
+        
+        Investment investment = new Investment(year1Deposit, year2Deposit, year3Deposit, coinSelection);
+        boolean added = user.addInvestment(investment);
+        if (!added) {
+            System.out.println("Failed to add investment, user can have at most two investments.");
+        } else {
+            System.out.println("Investment added successfully!");
+            writeUsersToFile(); // Update the file with the latest users list
         }
     }
 

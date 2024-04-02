@@ -32,7 +32,7 @@ public class CgtInterface {
             System.out.println("(5). Check specific user's details");
             System.out.println("(6). Display all users");
             System.out.println("(7). Exit");
-            int choice = scanner.nextInt();
+            int choice = getPositiveIntegerInput("Select a number: ");
 
             // user selection
             switch (choice) {
@@ -115,7 +115,6 @@ public class CgtInterface {
     }
 
 
-
     /*
         - Add user
         - Delete user
@@ -137,7 +136,7 @@ public class CgtInterface {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        scanner.nextLine();
+        
 
         // ask user basic information
         System.out.println("Enter user's name: ");
@@ -504,7 +503,8 @@ public class CgtInterface {
         } while (selection < 1 || selection > 3);
         return selection;
     }
-
+    
+    // get yearly investment
     private double getYearlyInvestment(Scanner scanner, int year) {
         double yearlyInvestment;
         do {

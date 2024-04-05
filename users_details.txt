@@ -1,6 +1,0 @@
-Name: C
-Resident: Yes
-Annual Salary: $75000.00
-Actual Profit: $675.00
-Number of investments: 0
-

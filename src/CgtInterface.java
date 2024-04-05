@@ -51,7 +51,8 @@ public class CgtInterface {
             System.out.println("(4). Delete user's investment");
             System.out.println("(5). Check specific user's details");
             System.out.println("(6). Display all users");
-            System.out.println("(7). Exit");
+            System.out.println("(7). Save to file");
+            System.out.println("(8). Exit");
             int choice = getPositiveIntegerInput("Select a number: ");
 
             // user selection
@@ -79,34 +80,41 @@ public class CgtInterface {
                     } else {
                         System.out.println("There are no users to add investments to.");
                     }
-                    System.out.printf("Press Enter to return to the main menu...");
+                    System.out.println("Press Enter to return to the main menu...");
                     scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 3:
                 // delete user
                     deleteUser();
-                    System.out.printf("Press Enter to return to the main menu...");
+                    System.out.println("Press Enter to return to the main menu...");
                     scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 4:
                 // delete investment
                     deleteInvestment();
-                    System.out.printf("Press Enter to return to the main menu...");
+                    System.out.println("Press Enter to return to the main menu...");
                     scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 5:
                 // display user
                     displayUser();
-                    System.out.printf("Press Enter to return to the main menu...");
+                    System.out.println("Press Enter to return to the main menu...");
                     scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 6:
                 // display all users
                     displayAllUsers();
-                    System.out.printf("Press Enter to return to the main menu...");
+                    System.out.println("Press Enter to return to the main menu...");
                     scanner.nextLine(); // Wait for the user to press Enter
                     break;
                 case 7:
+                // save to file
+                    writeUsersToFile();
+                    System.out.println("Save file successfully!");
+                    System.out.println("Press Enter to return to the main menu...");
+                    scanner.nextLine(); // Wait for the user to press Enter
+                    break;
+                case 8:
                 // exit
                     System.out.println("Exiting program...");
                     scanner.close();
@@ -167,7 +175,7 @@ public class CgtInterface {
 
         users.add(newUser);
         System.out.println("User added successfully!" + "\n");
-        writeUsersToFile(); // Update the file with the latest users list
+
     }
 
     /**
@@ -218,7 +226,6 @@ public class CgtInterface {
             System.out.println("Failed to add investment, user can have at most two investments."); // If the investment was not added
         } else {
             System.out.println("Investment added successfully!");
-            writeUsersToFile(); // Update the file with the latest users list
         }
     }
 
@@ -436,8 +443,8 @@ public class CgtInterface {
         // remove the investment
         user.getInvestments().remove(investmentCount - 1); // remove the investment from the list
         System.out.println("Investment deleted successfully.");
-        writeUsersToFile(); // update the file with the latest users list
     }
+
 
     /**
      * This method prompts the user to enter the number of the investment they wish to delete and validates the input.
